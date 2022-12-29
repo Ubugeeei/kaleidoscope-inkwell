@@ -7,7 +7,7 @@ pub enum Token {
     // ops
     Binary,
     Unary,
-    Op(String),
+    Op(char),
 
     // keywords (declare)
     Def,
