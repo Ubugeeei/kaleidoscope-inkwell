@@ -1,3 +1,5 @@
+use super::token::Token;
+
 pub struct Lexer {
     pub input_chars: Vec<char>,
     pub current_char: char,
@@ -29,7 +31,33 @@ impl Lexer {
     }
 }
 
+impl Lexer {
+    fn next(&mut self) -> Token {
+        let tok = match self.current_char {
+            ',' => Token::Comma,
+            '(' => Token::LParen,
+            ')' => Token::RParen,
+            '#' => Token::Comment,
+            '\0' => Token::EOF,
+            _ => Token::Illegal,
+        };
+        self.read_char();
+        tok
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_next() {
+        let input = String::from(",()#");
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Comma);
+        assert_eq!(l.next(), Token::LParen);
+        assert_eq!(l.next(), Token::RParen);
+        assert_eq!(l.next(), Token::Comment);
+        assert_eq!(l.next(), Token::EOF);
+    }
 }
