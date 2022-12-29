@@ -29,6 +29,13 @@ impl Lexer {
             '(' => Token::LParen,
             ')' => Token::RParen,
             '#' => Token::Comment,
+            '+' => Token::Op(String::from("+")),
+            '-' => Token::Op(String::from("-")),
+            '*' => Token::Op(String::from("*")),
+            '/' => Token::Op(String::from("/")),
+            '<' => Token::Op(String::from("<")),
+            '>' => Token::Op(String::from(">")),
+            '=' => Token::Op(String::from("=")),
             '\0' => Token::EOF,
             _ => {
                 if self.current_char.is_alphabetic() {
@@ -123,6 +130,20 @@ mod tests {
         assert_eq!(l.next(), Token::LParen);
         assert_eq!(l.next(), Token::RParen);
         assert_eq!(l.next(), Token::Comment);
+        assert_eq!(l.next(), Token::EOF);
+    }
+
+    #[test]
+    fn test_lex_op() {
+        let input = String::from("+-*/<>=");
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Op(String::from("+")));
+        assert_eq!(l.next(), Token::Op(String::from("-")));
+        assert_eq!(l.next(), Token::Op(String::from("*")));
+        assert_eq!(l.next(), Token::Op(String::from("/")));
+        assert_eq!(l.next(), Token::Op(String::from("<")));
+        assert_eq!(l.next(), Token::Op(String::from(">")));
+        assert_eq!(l.next(), Token::Op(String::from("=")));
         assert_eq!(l.next(), Token::EOF);
     }
 
