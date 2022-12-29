@@ -3,5 +3,17 @@
 version = 3
 
 [[package]]
-name = "kaleidoscope-inkwell"
+name = "ast"
 version = "0.1.0"
+
+[[package]]
+name = "lex"
+version = "0.1.0"
+
+[[package]]
+name = "parse"
+version = "0.1.0"
+dependencies = [
+ "ast",
+ "lex",
+]
