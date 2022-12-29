@@ -123,7 +123,39 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_next() {
+    fn test_lex() {
+        let input = String::from("def fib(n) if n < 2 then n else fib(n - 1) + fib(n - 2)");
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Def);
+        assert_eq!(l.next(), Token::Identifier(String::from("fib")));
+        assert_eq!(l.next(), Token::LParen);
+        assert_eq!(l.next(), Token::Identifier(String::from("n")));
+        assert_eq!(l.next(), Token::RParen);
+        assert_eq!(l.next(), Token::If);
+        assert_eq!(l.next(), Token::Identifier(String::from("n")));
+        assert_eq!(l.next(), Token::Op(String::from("<")));
+        assert_eq!(l.next(), Token::Number(2.0));
+        assert_eq!(l.next(), Token::Then);
+        assert_eq!(l.next(), Token::Identifier(String::from("n")));
+        assert_eq!(l.next(), Token::Else);
+        assert_eq!(l.next(), Token::Identifier(String::from("fib")));
+        assert_eq!(l.next(), Token::LParen);
+        assert_eq!(l.next(), Token::Identifier(String::from("n")));
+        assert_eq!(l.next(), Token::Op(String::from("-")));
+        assert_eq!(l.next(), Token::Number(1.0));
+        assert_eq!(l.next(), Token::RParen);
+        assert_eq!(l.next(), Token::Op(String::from("+")));
+        assert_eq!(l.next(), Token::Identifier(String::from("fib")));
+        assert_eq!(l.next(), Token::LParen);
+        assert_eq!(l.next(), Token::Identifier(String::from("n")));
+        assert_eq!(l.next(), Token::Op(String::from("-")));
+        assert_eq!(l.next(), Token::Number(2.0));
+        assert_eq!(l.next(), Token::RParen);
+        assert_eq!(l.next(), Token::EOF);
+    }
+
+    #[test]
+    fn test_lex_symbol() {
         let input = String::from(",()#");
         let mut l = Lexer::new(input);
         assert_eq!(l.next(), Token::Comma);
