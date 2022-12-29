@@ -9,7 +9,7 @@ pub struct Lexer {
 }
 
 impl Lexer {
-    fn new(input: String) -> Lexer {
+    pub fn new(input: String) -> Lexer {
         let mut l = Lexer {
             input_chars: input.chars().collect(),
             current_position: 0,
@@ -32,17 +32,65 @@ impl Lexer {
 }
 
 impl Lexer {
-    fn next(&mut self) -> Token {
+    pub fn next(&mut self) -> Token {
+        self.consume_whitespace();
         let tok = match self.current_char {
             ',' => Token::Comma,
             '(' => Token::LParen,
             ')' => Token::RParen,
             '#' => Token::Comment,
             '\0' => Token::EOF,
-            _ => Token::Illegal,
+            _ => {
+                if self.current_char.is_alphabetic() {
+                    self.lex_word()
+                } else {
+                    Token::Illegal
+                }
+            }
         };
         self.read_char();
         tok
+    }
+}
+
+// lex word
+impl Lexer {
+    fn lex_word(&mut self) -> Token {
+        let word = self.consume_word();
+        self.ward_into_token(word)
+    }
+
+    fn consume_word(&mut self) -> String {
+        let mut word = String::new();
+        while self.current_char.is_alphanumeric() || self.current_char == '_' {
+            word.push(self.current_char);
+            self.read_char();
+        }
+        word
+    }
+
+    fn ward_into_token(&mut self, word: String) -> Token {
+        match word.as_str() {
+            "binary" => Token::Binary,
+            "unary" => Token::Unary,
+            "def" => Token::Def,
+            "var" => Token::Var,
+            "extern" => Token::Extern,
+            "if" => Token::If,
+            "then" => Token::Then,
+            "else" => Token::Else,
+            "for" => Token::For,
+            "in" => Token::In,
+            _ => Token::Identifier(word),
+        }
+    }
+}
+
+impl Lexer {
+    fn consume_whitespace(&mut self) {
+        while self.current_char.is_whitespace() {
+            self.read_char();
+        }
     }
 }
 
@@ -58,6 +106,24 @@ mod tests {
         assert_eq!(l.next(), Token::LParen);
         assert_eq!(l.next(), Token::RParen);
         assert_eq!(l.next(), Token::Comment);
+        assert_eq!(l.next(), Token::EOF);
+    }
+
+    #[test]
+    fn test_lex_word() {
+        let input = String::from("hoge binary unary def var extern if then else for in");
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Identifier(String::from("hoge")));
+        assert_eq!(l.next(), Token::Binary);
+        assert_eq!(l.next(), Token::Unary);
+        assert_eq!(l.next(), Token::Def);
+        assert_eq!(l.next(), Token::Var);
+        assert_eq!(l.next(), Token::Extern);
+        assert_eq!(l.next(), Token::If);
+        assert_eq!(l.next(), Token::Then);
+        assert_eq!(l.next(), Token::Else);
+        assert_eq!(l.next(), Token::For);
+        assert_eq!(l.next(), Token::In);
         assert_eq!(l.next(), Token::EOF);
     }
 }
