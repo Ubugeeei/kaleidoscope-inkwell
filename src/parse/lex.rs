@@ -126,4 +126,21 @@ mod tests {
         assert_eq!(l.next(), Token::In);
         assert_eq!(l.next(), Token::EOF);
     }
+
+    #[test]
+    fn test_whitespace() {
+        let input = String::from(
+            r#"
+        
+        
+        
+        , 
+                (
+                  
+                  "#,
+        );
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Comma);
+        assert_eq!(l.next(), Token::LParen);
+    }
 }
