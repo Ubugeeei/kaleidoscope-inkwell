@@ -25,18 +25,57 @@ impl Lexer {
     pub fn next(&mut self) -> Token {
         self.consume_whitespace();
         let tok = match self.current_char {
-            ',' => Token::Comma,
-            '(' => Token::LParen,
-            ')' => Token::RParen,
-            '#' => Token::Comment,
-            '+' => Token::Op(String::from("+")),
-            '-' => Token::Op(String::from("-")),
-            '*' => Token::Op(String::from("*")),
-            '/' => Token::Op(String::from("/")),
-            '<' => Token::Op(String::from("<")),
-            '>' => Token::Op(String::from(">")),
-            '=' => Token::Op(String::from("=")),
-            '\0' => Token::EOF,
+            // symbols
+            ',' => {
+                self.consume_char();
+                Token::Comma
+            }
+            '(' => {
+                self.consume_char();
+                Token::LParen
+            }
+            ')' => {
+                self.consume_char();
+                Token::RParen
+            }
+            '#' => {
+                self.consume_char();
+                Token::Comment
+            }
+            // ops
+            '+' => {
+                self.consume_char();
+                Token::Op(String::from("+"))
+            }
+            '-' => {
+                self.consume_char();
+                Token::Op(String::from("-"))
+            }
+            '*' => {
+                self.consume_char();
+                Token::Op(String::from("*"))
+            }
+            '/' => {
+                self.consume_char();
+                Token::Op(String::from("/"))
+            }
+            '<' => {
+                self.consume_char();
+                Token::Op(String::from("<"))
+            }
+            '>' => {
+                self.consume_char();
+                Token::Op(String::from(">"))
+            }
+            '=' => {
+                self.consume_char();
+                Token::Op(String::from("="))
+            }
+            '\0' => {
+                self.consume_char();
+                Token::EOF
+            }
+            // multi-char
             _ => {
                 if self.current_char.is_alphabetic() {
                     self.lex_word()
@@ -47,7 +86,7 @@ impl Lexer {
                 }
             }
         };
-        self.consume_char();
+
         tok
     }
 }
