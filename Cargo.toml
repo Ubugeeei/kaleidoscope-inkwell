@@ -3,6 +3,6 @@ members = [
   "lex",
   "parse",
   "ast",
-  "jit",
+  "compile",
   "repl"
 ]

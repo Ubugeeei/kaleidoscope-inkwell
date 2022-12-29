@@ -1,5 +1,5 @@
 # Kaleidoscope Inkwell
-Inkwell based JIT compiler of Kaleidoscope language.  
+Inkwell based compile compiler of Kaleidoscope language.  
 <br/>
 
 Inkwell: https://github.com/TheDan64/inkwell

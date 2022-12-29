@@ -2,7 +2,7 @@ use std::io::Write;
 
 use inkwell::{context::Context, passes::PassManager, OptimizationLevel};
 
-use jit::Compiler;
+use compile::Compiler;
 use parse::Parser;
 
 #[no_mangle]
