@@ -7,6 +7,10 @@ name = "ast"
 version = "0.1.0"
 
 [[package]]
+name = "jit"
+version = "0.1.0"
+
+[[package]]
 name = "lex"
 version = "0.1.0"
 
