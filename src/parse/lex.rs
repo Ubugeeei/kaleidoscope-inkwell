@@ -33,8 +33,10 @@ impl Lexer {
             _ => {
                 if self.current_char.is_alphabetic() {
                     self.lex_word()
+                } else if self.current_char.is_numeric() {
+                    self.lex_number()
                 } else {
-                    Token::Illegal
+                    Token::Illegal(self.current_char.to_string())
                 }
             }
         };
@@ -72,6 +74,21 @@ impl Lexer {
             "for" => Token::For,
             "in" => Token::In,
             _ => Token::Identifier(word),
+        }
+    }
+}
+
+// lex number
+impl Lexer {
+    fn lex_number(&mut self) -> Token {
+        let mut number = String::new();
+        while self.current_char.is_numeric() || self.current_char == '.' {
+            number.push(self.current_char);
+            self.consume_char();
+        }
+        match number.parse::<f64>() {
+            Ok(n) => Token::Number(n),
+            Err(_) => Token::Illegal(number),
         }
     }
 }
@@ -124,6 +141,17 @@ mod tests {
         assert_eq!(l.next(), Token::Else);
         assert_eq!(l.next(), Token::For);
         assert_eq!(l.next(), Token::In);
+        assert_eq!(l.next(), Token::EOF);
+    }
+
+    #[test]
+    fn test_lex_number() {
+        let input = String::from("1 1.0 1.1 1.1.1");
+        let mut l = Lexer::new(input);
+        assert_eq!(l.next(), Token::Number(1.0));
+        assert_eq!(l.next(), Token::Number(1.0));
+        assert_eq!(l.next(), Token::Number(1.1));
+        assert_eq!(l.next(), Token::Illegal(String::from("1.1.1")));
         assert_eq!(l.next(), Token::EOF);
     }
 

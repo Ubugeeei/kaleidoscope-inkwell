@@ -28,6 +28,6 @@ pub enum Token {
     Comment,
 
     // misc
-    Illegal,
+    Illegal(String),
     EOF,
 }
