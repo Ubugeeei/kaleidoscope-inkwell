@@ -16,18 +16,8 @@ impl Lexer {
             read_position: 0,
             current_char: '\0',
         };
-        l.read_char();
+        l.consume_char();
         l
-    }
-
-    fn read_char(&mut self) {
-        if self.read_position >= self.input_chars.len() {
-            self.current_char = '\0';
-        } else {
-            self.current_char = self.input_chars[self.read_position];
-        }
-        self.current_position = self.read_position;
-        self.read_position += 1;
     }
 }
 
@@ -48,7 +38,7 @@ impl Lexer {
                 }
             }
         };
-        self.read_char();
+        self.consume_char();
         tok
     }
 }
@@ -64,7 +54,7 @@ impl Lexer {
         let mut word = String::new();
         while self.current_char.is_alphanumeric() || self.current_char == '_' {
             word.push(self.current_char);
-            self.read_char();
+            self.consume_char();
         }
         word
     }
@@ -87,9 +77,19 @@ impl Lexer {
 }
 
 impl Lexer {
+    fn consume_char(&mut self) {
+        if self.read_position >= self.input_chars.len() {
+            self.current_char = '\0';
+        } else {
+            self.current_char = self.input_chars[self.read_position];
+        }
+        self.current_position = self.read_position;
+        self.read_position += 1;
+    }
+
     fn consume_whitespace(&mut self) {
         while self.current_char.is_whitespace() {
-            self.read_char();
+            self.consume_char();
         }
     }
 }
