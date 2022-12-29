@@ -73,4 +73,13 @@ impl<'a, 'ctx> Compiler<'a, 'ctx> {
             Err("Invalid generated function.")
         }
     }
+
+    #[inline]
+    pub(super) fn get_function(&self, name: &str) -> Option<FunctionValue<'ctx>> {
+        self.module.get_function(name)
+    }
+
+    pub(super) fn fn_value(&self) -> FunctionValue<'ctx> {
+        self.fn_value_opt.unwrap()
+    }
 }
