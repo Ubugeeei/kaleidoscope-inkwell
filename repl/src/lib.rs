@@ -3,7 +3,10 @@ use std::io::Write;
 use inkwell::{context::Context, passes::PassManager, OptimizationLevel};
 
 use compile::Compiler;
+use options::ReplOptions;
 use parse::Parser;
+
+pub mod options;
 
 #[no_mangle]
 pub extern "C" fn put_chard(x: f64) -> f64 {
@@ -24,7 +27,7 @@ pub extern "C" fn print_d(x: f64) -> f64 {
 static EXTERNAL_FNS: [extern "C" fn(f64) -> f64; 2] = [put_chard, print_d];
 
 /// Entry point of the program; acts as a REPL.
-pub fn start() {
+pub fn start(options: ReplOptions) {
     let context = Context::create();
     let module = context.create_module("repl");
     let builder = context.create_builder();
@@ -103,6 +106,7 @@ pub fn start() {
 
             let maybe_fn =
                 unsafe { ee.get_function::<unsafe extern "C" fn() -> f64>(name.as_str()) };
+
             let compiled_fn = match maybe_fn {
                 Ok(f) => f,
                 Err(err) => {
@@ -114,6 +118,11 @@ pub fn start() {
             unsafe {
                 println!("=> {}", compiled_fn.call());
             }
+        } else {
+            if options.emit_ir {
+                println!("{}", format!("\x1b[30m{}\x1b[0m", module.to_string()));
+            }
+            // if options.emit_assembly {}
         }
     }
 }

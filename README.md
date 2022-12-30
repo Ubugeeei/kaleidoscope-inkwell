@@ -9,6 +9,7 @@ Kaleidoscope language (llvm tutorial): https://llvm.org/docs/tutorial/
 # Examples
 ```sh
 $ cargo run --example repl
+$ cargo run --example repl -- --emit-ir
 ```
 ```sh
 $ cargo run --example parse
