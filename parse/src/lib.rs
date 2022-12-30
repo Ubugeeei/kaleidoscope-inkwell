@@ -45,13 +45,7 @@ impl Parser {
         };
 
         match result {
-            Ok(result) => {
-                if self.current_token == Token::EOF {
-                    Err("Unexpected token after parsed expression.")
-                } else {
-                    Ok(result)
-                }
-            }
+            Ok(result) => Ok(result),
             err => err,
         }
     }

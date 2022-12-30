@@ -31,7 +31,7 @@ impl Parser {
     pub(super) fn parse_expr(&mut self) -> Result<Expression, &'static str> {
         match self.parse_unary_expr() {
             Ok(left) => self.parse_binary_expr(0, left),
-            err => err,
+            Err(e) => Err(e),
         }
     }
 
